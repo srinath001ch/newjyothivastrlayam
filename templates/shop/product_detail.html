@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+{% block title %}{{ saree.name }} | {{ SHOP_NAME }}{% endblock %}
+{% block meta_description %}{{ saree.name }} — {{ saree.description|truncatewords:25 }}{% endblock %}
+
+{% block content %}
+
+<section class="max-w-7xl mx-auto px-5 md:px-10 pt-32 pb-24">
+
+  <!-- Breadcrumb -->
+  <div class="text-xs text-ink-900/50 mb-10 tracking-wide" data-aos="fade-up">
+    <a href="{% url 'shop:home' %}" class="hover:text-maroon-500">Home</a>
+    <span class="mx-2">/</span>
+    <a href="{% url 'shop:collection' %}" class="hover:text-maroon-500">Collection</a>
+    <span class="mx-2">/</span>
+    <span class="text-maroon-500">{{ saree.name }}</span>
+  </div>
+
+  <div class="grid lg:grid-cols-2 gap-14">
+
+    <!-- Gallery -->
+    <div data-aos="fade-right">
+      <div class="swiper product-main-swiper rounded-sm overflow-hidden border border-maroon-500/10 relative">
+        <div class="swiper-wrapper">
+          {% for img in saree.images.all %}
+          <div class="swiper-slide aspect-[3/4]">
+            <img src="{{ img.image.url }}" alt="{{ saree.name }}" class="w-full h-full object-cover">
+          </div>
+          {% empty %}
+          <div class="swiper-slide aspect-[3/4]">
+            <img src="https://images.unsplash.com/photo-1610030181087-540f829b3fe8?q=80&w=1200&auto=format&fit=crop" alt="{{ saree.name }}" class="w-full h-full object-cover">
+          </div>
+          {% endfor %}
+        </div>
+        <button class="product-prev absolute left-4 top-1/2 -translate-y-1/2 z-10 w-11 h-11 rounded-full bg-ink-900/70 flex items-center justify-center text-gold-200">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"/></svg>
+        </button>
+        <button class="product-next absolute right-4 top-1/2 -translate-y-1/2 z-10 w-11 h-11 rounded-full bg-ink-900/70 flex items-center justify-center text-gold-200">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"/></svg>
+        </button>
+      </div>
+
+      {% if saree.images.all|length > 1 %}
+      <div class="swiper product-thumbs mt-4">
+        <div class="swiper-wrapper">
+          {% for img in saree.images.all %}
+          <div class="swiper-slide aspect-square rounded-sm overflow-hidden border border-maroon-500/10 cursor-pointer opacity-60 hover:opacity-100 transition-opacity">
+            <img src="{{ img.image.url }}" alt="{{ saree.name }}" class="w-full h-full object-cover">
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+    </div>
+
+    <!-- Details -->
+    <div data-aos="fade-left">
+      {% if saree.category %}
+      <a href="{% url 'shop:collection' %}?category={{ saree.category.slug }}" class="text-xs font-semibold uppercase tracking-[0.25em] text-gold-600">{{ saree.category.name }}</a>
+      {% endif %}
+      <h1 class="font-heading text-4xl md:text-5xl heading-accent mt-3 mb-5 leading-tight">{{ saree.name }}</h1>
+
+      <div class="flex items-baseline gap-4 mb-6">
+        <span class="font-heading text-3xl text-maroon-500">&#8377;{{ saree.price|floatformat:0 }}</span>
+        {% if saree.old_price %}
+          <span class="text-ink-900/40 line-through text-lg">&#8377;{{ saree.old_price|floatformat:0 }}</span>
+          <span class="badge-gold">SAVE {{ saree.discount_percent }}%</span>
+        {% endif %}
+      </div>
+
+      {% if saree.fabric %}
+      <div class="flex items-center gap-2 mb-6 text-sm text-ink-900/70">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-gold-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9.53 16.122a3 3 0 00-5.78 1.128 2.25 2.25 0 01-2.4 2.245 4.5 4.5 0 008.4-2.245c0-.399-.078-.78-.22-1.128zm0 0a15.998 15.998 0 003.388-1.62m-5.043-.025a15.994 15.994 0 011.622-3.395m3.42 3.42a15.995 15.995 0 004.764-4.648l3.876-5.814a1.151 1.151 0 00-1.597-1.597L14.146 6.32a15.996 15.996 0 00-4.649 4.763m3.42 3.42a6.776 6.776 0 00-3.42-3.42"/></svg>
+        <span>Fabric: <strong class="text-ink-900">{{ saree.fabric }}</strong></span>
+      </div>
+      {% endif %}
+
+      <div class="zari-border-sm w-16 mb-6"></div>
+
+      <p class="text-ink-900/70 leading-relaxed mb-10 whitespace-pre-line">{{ saree.description }}</p>
+
+      <a href="https://wa.me/{{ SHOP_WHATSAPP }}?text={{ saree.whatsapp_message|urlencode }}"
+         target="_blank"
+         class="w-full sm:w-auto inline-flex items-center justify-center gap-3 bg-gradient-to-r from-[#25d366] to-[#128c7e] text-white font-semibold uppercase tracking-widest text-sm px-10 py-5 rounded-sm shadow-[0_15px_35px_-10px_rgba(37,211,102,0.5)] hover:shadow-[0_20px_45px_-10px_rgba(37,211,102,0.75)] hover:-translate-y-1 transition-all duration-300">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-6 h-6" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.77.46 3.45 1.32 4.94L2 22l5.29-1.39a9.87 9.87 0 004.75 1.21h.01c5.46 0 9.9-4.45 9.9-9.91C21.96 6.45 17.5 2 12.04 2zm5.8 14.03c-.24.68-1.4 1.32-1.93 1.4-.5.08-1.11.11-1.79-.11-.41-.13-.95-.31-1.63-.6-2.87-1.24-4.74-4.12-4.88-4.31-.14-.19-1.17-1.56-1.17-2.98 0-1.42.75-2.11 1.02-2.4.27-.29.58-.36.78-.36l.56.01c.18.01.42-.07.65.5.24.58.82 2 .89 2.14.07.14.12.31.02.5-.1.19-.15.3-.29.47-.14.16-.3.36-.43.48-.14.14-.29.29-.13.57.16.29.72 1.19 1.55 1.93 1.06.95 1.96 1.24 2.24 1.38.29.14.46.12.63-.07.17-.19.71-.83.9-1.11.19-.29.38-.24.63-.14.26.1 1.63.77 1.91.91.28.14.46.21.53.33.07.12.07.71-.17 1.39z"/></svg>
+        Order on WhatsApp
+      </a>
+
+      <div class="mt-8 flex flex-col gap-3 text-sm text-ink-900/70">
+        <p class="flex items-center gap-2"><svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-gold-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg> Handpicked &amp; quality checked</p>
+        <p class="flex items-center gap-2"><svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-gold-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/></svg> Available for pickup at {{ SHOP_ADDRESS }}</p>
+        <p class="flex items-center gap-2"><svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-gold-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h1.5a2.25 2.25 0 002.25-2.25v-1.372a1.5 1.5 0 00-1.244-1.478l-3.4-.567a1.5 1.5 0 00-1.55.759l-.36.72a11.25 11.25 0 01-6.058-6.058l.72-.36a1.5 1.5 0 00.759-1.55l-.567-3.4A1.5 1.5 0 007.372 2.25H6A2.25 2.25 0 003.75 4.5v.75z"/></svg> Call us for more details: {{ SHOP_PHONE }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Related Sarees -->
+  {% if related_sarees %}
+  <div class="mt-28">
+    <div class="text-center mb-14" data-aos="fade-up">
+      <p class="section-label mb-3">You May Also Like</p>
+      <h2 class="font-heading text-3xl md:text-4xl heading-accent">Related Sarees</h2>
+      <div class="zari-border-sm w-24 mx-auto mt-6"></div>
+    </div>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-5 md:gap-8 gsap-stagger-group">
+      {% for related in related_sarees %}
+      <div class="gsap-stagger-item">
+        {% include "shop/_product_card.html" with saree=related %}
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+
+</section>
+
+{% endblock %}

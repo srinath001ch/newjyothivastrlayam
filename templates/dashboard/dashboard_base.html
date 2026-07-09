@@ -1,0 +1,104 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% block title %}Dashboard{% endblock %} | {{ SHOP_NAME }}</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          gold: { 50:'#faf6ea',100:'#f4ecd0',200:'#e8cf8a',300:'#ddc073',400:'#d4b05c',500:'#c9a24b',600:'#af8a3c',700:'#9a7a2f',800:'#7a6125',900:'#5c491c' },
+          ink: { 900:'#0a0a0a', 800:'#121212', 700:'#161616', 600:'#1c1c1c' },
+        },
+        fontFamily: { heading: ['Marcellus','serif'], body: ['Poppins','sans-serif'] },
+      },
+    },
+  }
+</script>
+<link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body class="bg-ink-900 text-white font-body min-h-screen flex">
+
+<!-- Sidebar -->
+<aside class="w-64 bg-ink-800 border-r border-gold-500/15 min-h-screen fixed top-0 left-0 hidden lg:flex flex-col">
+  <div class="px-6 py-8 border-b border-gold-500/15">
+    <div class="flex items-center gap-3">
+      <span class="w-10 h-10 rounded-full border border-gold-500/60 flex items-center justify-center text-gold-500 font-heading">NJ</span>
+      <div class="leading-tight">
+        <p class="font-heading text-sm text-white">NEW JYOTHI</p>
+        <p class="text-gold-500 text-xs">Dashboard</p>
+      </div>
+    </div>
+  </div>
+  <nav class="flex-1 px-4 py-6 space-y-1 text-sm">
+    <a href="{% url 'shop:dashboard_home' %}" class="flex items-center gap-3 px-4 py-3 rounded-sm hover:bg-gold-500/10 hover:text-gold-500 transition-colors {% if active == 'home' %}bg-gold-500/10 text-gold-500{% endif %}">
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"/></svg>
+      Dashboard
+    </a>
+    <a href="{% url 'shop:dashboard_saree_list' %}" class="flex items-center gap-3 px-4 py-3 rounded-sm hover:bg-gold-500/10 hover:text-gold-500 transition-colors {% if active == 'sarees' %}bg-gold-500/10 text-gold-500{% endif %}">
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 2.25H7.5A2.25 2.25 0 005.25 4.5v15A2.25 2.25 0 007.5 21.75h9a2.25 2.25 0 002.25-2.25v-15A2.25 2.25 0 0016.5 2.25H15M9 2.25v3.75c0 .414.336.75.75.75h4.5A.75.75 0 0015 6V2.25M9 2.25h6"/></svg>
+      Manage Sarees
+    </a>
+    <a href="{% url 'shop:dashboard_category_list' %}" class="flex items-center gap-3 px-4 py-3 rounded-sm hover:bg-gold-500/10 hover:text-gold-500 transition-colors {% if active == 'categories' %}bg-gold-500/10 text-gold-500{% endif %}">
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 6h.008v.008H6V6z"/><path stroke-linecap="round" stroke-linejoin="round" d="M7.84 1.804A1 1 0 018.82 1h6.36a1 1 0 01.98.804l1.24 6.196a1 1 0 01-.276.916l-8.5 8.5a1 1 0 01-1.414 0l-6.24-6.24a1 1 0 010-1.414l8.5-8.5a1 1 0 01.37-.262z"/></svg>
+      Categories
+    </a>
+    <a href="{% url 'shop:dashboard_messages' %}" class="flex items-center gap-3 px-4 py-3 rounded-sm hover:bg-gold-500/10 hover:text-gold-500 transition-colors {% if active == 'messages' %}bg-gold-500/10 text-gold-500{% endif %}">
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M8.625 12a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 01-2.555-.337A5.972 5.972 0 015.41 20.97a5.969 5.969 0 01-.474-.065 4.48 4.48 0 00.978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25z"/></svg>
+      Messages
+    </a>
+    <a href="{% url 'shop:home' %}" target="_blank" class="flex items-center gap-3 px-4 py-3 rounded-sm hover:bg-gold-500/10 hover:text-gold-500 transition-colors text-gray-400">
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"/></svg>
+      View Website
+    </a>
+  </nav>
+  <div class="px-4 py-6 border-t border-gold-500/15">
+    <div class="px-4 mb-3 text-xs text-gray-500">Logged in as <span class="text-gold-500">{{ request.user.username }}</span></div>
+    <a href="{% url 'shop:dashboard_logout' %}" class="flex items-center gap-3 px-4 py-3 rounded-sm text-gray-400 hover:bg-red-500/10 hover:text-red-400 transition-colors text-sm">
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 9V5.25A2.25 2.25 0 0110.5 3h6a2.25 2.25 0 012.25 2.25v13.5A2.25 2.25 0 0116.5 21h-6a2.25 2.25 0 01-2.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3H15"/></svg>
+      Logout
+    </a>
+  </div>
+</aside>
+
+<!-- Mobile top bar -->
+<div class="lg:hidden fixed top-0 left-0 w-full bg-ink-800 border-b border-gold-500/15 z-40 px-5 py-4 flex items-center justify-between">
+  <div class="flex items-center gap-2">
+    <span class="w-9 h-9 rounded-full border border-gold-500/60 flex items-center justify-center text-gold-500 font-heading text-sm">NJ</span>
+    <span class="text-gold-500 font-heading text-sm">Dashboard</span>
+  </div>
+  <button id="mobile-dash-toggle" class="text-gold-500">
+    <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"/></svg>
+  </button>
+</div>
+<div id="mobile-dash-menu" class="lg:hidden hidden fixed top-[65px] left-0 w-full bg-ink-800 border-b border-gold-500/15 z-40 px-5 py-4 space-y-2 text-sm">
+  <a href="{% url 'shop:dashboard_home' %}" class="block px-4 py-3 rounded hover:bg-gold-500/10 hover:text-gold-500">Dashboard</a>
+  <a href="{% url 'shop:dashboard_saree_list' %}" class="block px-4 py-3 rounded hover:bg-gold-500/10 hover:text-gold-500">Manage Sarees</a>
+  <a href="{% url 'shop:dashboard_category_list' %}" class="block px-4 py-3 rounded hover:bg-gold-500/10 hover:text-gold-500">Categories</a>
+  <a href="{% url 'shop:dashboard_messages' %}" class="block px-4 py-3 rounded hover:bg-gold-500/10 hover:text-gold-500">Messages</a>
+  <a href="{% url 'shop:home' %}" target="_blank" class="block px-4 py-3 rounded text-gray-400 hover:bg-gold-500/10 hover:text-gold-500">View Website</a>
+  <a href="{% url 'shop:dashboard_logout' %}" class="block px-4 py-3 rounded text-red-400 hover:bg-red-500/10">Logout</a>
+</div>
+<script>
+  document.getElementById('mobile-dash-toggle')?.addEventListener('click', () => {
+    document.getElementById('mobile-dash-menu')?.classList.toggle('hidden');
+  });
+</script>
+
+<!-- Main -->
+<main class="flex-1 lg:ml-64 px-5 md:px-10 py-10 mt-16 lg:mt-0 max-w-full">
+  {% if messages %}
+    {% for message in messages %}
+      <div class="mb-6 px-5 py-4 rounded-sm border-l-4 border-gold-500 bg-gold-500/10 text-sm text-gold-200">{{ message }}</div>
+    {% endfor %}
+  {% endif %}
+  {% block dash_content %}{% endblock %}
+</main>
+
+</body>
+</html>

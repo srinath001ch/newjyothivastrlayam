@@ -1,0 +1,103 @@
+{% extends "dashboard/dashboard_base.html" %}
+{% block title %}Dashboard{% endblock %}
+
+{% block dash_content %}
+
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-10">
+  <div>
+    <h1 class="font-heading text-3xl text-white">Welcome back!</h1>
+    <p class="text-gray-500 text-sm mt-1">Here's what's happening with your store today.</p>
+  </div>
+  <a href="{% url 'shop:dashboard_saree_add' %}" class="btn-gold text-xs">+ Add New Saree</a>
+</div>
+
+<!-- Stats -->
+<div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+  <div class="glass rounded-sm p-6">
+    <p class="text-gray-500 text-xs uppercase tracking-widest mb-2">Total Sarees</p>
+    <p class="font-heading text-4xl text-gold-500">{{ total_sarees }}</p>
+  </div>
+  <div class="glass rounded-sm p-6">
+    <p class="text-gray-500 text-xs uppercase tracking-widest mb-2">Active Sarees</p>
+    <p class="font-heading text-4xl text-gold-500">{{ active_sarees }}</p>
+  </div>
+  <div class="glass rounded-sm p-6">
+    <p class="text-gray-500 text-xs uppercase tracking-widest mb-2">Featured</p>
+    <p class="font-heading text-4xl text-gold-500">{{ featured_sarees }}</p>
+  </div>
+  <div class="glass rounded-sm p-6">
+    <p class="text-gray-500 text-xs uppercase tracking-widest mb-2">Categories</p>
+    <p class="font-heading text-4xl text-gold-500">{{ total_categories }}</p>
+  </div>
+</div>
+
+<div class="grid lg:grid-cols-3 gap-8">
+  <!-- Recent Sarees -->
+  <div class="lg:col-span-2 glass rounded-sm p-6 md:p-8">
+    <div class="flex items-center justify-between mb-6">
+      <h2 class="font-heading text-xl text-white">Recently Added</h2>
+      <a href="{% url 'shop:dashboard_saree_list' %}" class="text-gold-500 text-xs hover:underline">View All &rarr;</a>
+    </div>
+    {% if recent_sarees %}
+    <div class="space-y-4">
+      {% for saree in recent_sarees %}
+      <div class="flex items-center gap-4 bg-black/30 rounded-sm p-3">
+        {% with img=saree.primary_image %}
+          {% if img %}
+            <img src="{{ img.image.url }}" class="w-14 h-14 object-cover rounded-sm">
+          {% else %}
+            <div class="w-14 h-14 bg-ink-700 rounded-sm flex items-center justify-center text-gold-500 text-xs">No Img</div>
+          {% endif %}
+        {% endwith %}
+        <div class="flex-1 min-w-0">
+          <p class="text-white text-sm truncate">{{ saree.name }}</p>
+          <p class="text-gold-500 text-xs">&#8377;{{ saree.price|floatformat:0 }} &middot; {{ saree.category.name|default:"Uncategorized" }}</p>
+        </div>
+        <a href="{% url 'shop:dashboard_saree_edit' saree.pk %}" class="text-gray-400 hover:text-gold-500 text-xs px-3 py-1 border border-gold-500/20 rounded">Edit</a>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <p class="text-gray-500 text-sm">No sarees added yet. <a href="{% url 'shop:dashboard_saree_add' %}" class="text-gold-500 hover:underline">Add your first saree</a>.</p>
+    {% endif %}
+  </div>
+
+  <!-- Recent Messages -->
+  <div class="glass rounded-sm p-6 md:p-8">
+    <div class="flex items-center justify-between mb-6">
+      <h2 class="font-heading text-xl text-white">Recent Messages</h2>
+      <a href="{% url 'shop:dashboard_messages' %}" class="text-gold-500 text-xs hover:underline">View All &rarr;</a>
+    </div>
+    {% if recent_messages %}
+    <div class="space-y-4">
+      {% for msg in recent_messages %}
+      <div class="bg-black/30 rounded-sm p-3">
+        <p class="text-white text-sm">{{ msg.name }}</p>
+        <p class="text-gold-500 text-xs mb-1">{{ msg.phone }}</p>
+        <p class="text-gray-400 text-xs line-clamp-2">{{ msg.message }}</p>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <p class="text-gray-500 text-sm">No messages yet.</p>
+    {% endif %}
+  </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="grid sm:grid-cols-3 gap-6 mt-8">
+  <a href="{% url 'shop:dashboard_saree_add' %}" class="glass rounded-sm p-6 hover:border-gold-500/50 transition-all text-center">
+    <p class="text-gold-500 font-heading text-lg mb-1">+ Add Saree</p>
+    <p class="text-gray-500 text-xs">Upload a new saree with images</p>
+  </a>
+  <a href="{% url 'shop:dashboard_category_add' %}" class="glass rounded-sm p-6 hover:border-gold-500/50 transition-all text-center">
+    <p class="text-gold-500 font-heading text-lg mb-1">+ Add Category</p>
+    <p class="text-gray-500 text-xs">Create a new saree category</p>
+  </a>
+  <a href="{% url 'shop:home' %}" target="_blank" class="glass rounded-sm p-6 hover:border-gold-500/50 transition-all text-center">
+    <p class="text-gold-500 font-heading text-lg mb-1">View Website</p>
+    <p class="text-gray-500 text-xs">See how customers see your store</p>
+  </a>
+</div>
+
+{% endblock %}

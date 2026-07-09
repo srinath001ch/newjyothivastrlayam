@@ -1,0 +1,96 @@
+{% extends "dashboard/dashboard_base.html" %}
+{% block title %}{{ title }}{% endblock %}
+
+{% block dash_content %}
+
+<div class="flex items-center gap-4 mb-8">
+  <a href="{% url 'shop:dashboard_saree_list' %}" class="text-gray-400 hover:text-gold-500">
+    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"/></svg>
+  </a>
+  <h1 class="font-heading text-3xl text-white">{{ title }}</h1>
+</div>
+
+<form method="post" enctype="multipart/form-data" class="space-y-8">
+  {% csrf_token %}
+
+  <div class="glass rounded-sm p-6 md:p-8">
+    <h2 class="font-heading text-xl text-gold-500 mb-6">Saree Details</h2>
+    <div class="grid md:grid-cols-2 gap-6">
+      <div class="md:col-span-2">
+        <label class="text-xs uppercase tracking-widest text-gray-400 mb-2 block">Saree Name</label>
+        {{ form.name }}
+        {% if form.name.errors %}<p class="text-red-400 text-xs mt-1">{{ form.name.errors.0 }}</p>{% endif %}
+      </div>
+      <div>
+        <label class="text-xs uppercase tracking-widest text-gray-400 mb-2 block">Category</label>
+        {{ form.category }}
+        {% if form.category.errors %}<p class="text-red-400 text-xs mt-1">{{ form.category.errors.0 }}</p>{% endif %}
+      </div>
+      <div>
+        <label class="text-xs uppercase tracking-widest text-gray-400 mb-2 block">Fabric</label>
+        {{ form.fabric }}
+      </div>
+      <div>
+        <label class="text-xs uppercase tracking-widest text-gray-400 mb-2 block">Price (&#8377;)</label>
+        {{ form.price }}
+        {% if form.price.errors %}<p class="text-red-400 text-xs mt-1">{{ form.price.errors.0 }}</p>{% endif %}
+      </div>
+      <div>
+        <label class="text-xs uppercase tracking-widest text-gray-400 mb-2 block">Original Price (&#8377;) — Optional</label>
+        {{ form.old_price }}
+      </div>
+      <div class="md:col-span-2">
+        <label class="text-xs uppercase tracking-widest text-gray-400 mb-2 block">Description</label>
+        {{ form.description }}
+        {% if form.description.errors %}<p class="text-red-400 text-xs mt-1">{{ form.description.errors.0 }}</p>{% endif %}
+      </div>
+      <div class="flex items-center gap-3">
+        {{ form.is_featured }}
+        <label class="text-sm text-gray-300">Show in Featured Sarees section</label>
+      </div>
+      <div class="flex items-center gap-3">
+        {{ form.is_active }}
+        <label class="text-sm text-gray-300">Active (visible on website)</label>
+      </div>
+    </div>
+  </div>
+
+  <div class="glass rounded-sm p-6 md:p-8">
+    <h2 class="font-heading text-xl text-gold-500 mb-2">Saree Images</h2>
+    <p class="text-gray-500 text-xs mb-6">Upload one or more images. Tick "Primary" for the main image shown on the collection page.</p>
+    {{ formset.management_form }}
+    <div class="space-y-6">
+      {% for image_form in formset %}
+      <div class="border border-gold-500/15 rounded-sm p-5 grid md:grid-cols-[auto_1fr_auto_auto] gap-5 items-center">
+        {% if image_form.instance.pk and image_form.instance.image %}
+          <img src="{{ image_form.instance.image.url }}" class="w-20 h-20 object-cover rounded-sm">
+        {% else %}
+          <div class="w-20 h-20 bg-ink-700 rounded-sm flex items-center justify-center text-gray-500 text-[10px]">No Image</div>
+        {% endif %}
+        <div>
+          {{ image_form.image }}
+          {% if image_form.image.errors %}<p class="text-red-400 text-xs mt-1">{{ image_form.image.errors.0 }}</p>{% endif %}
+          {{ image_form.id }}
+        </div>
+        <div class="flex items-center gap-2 whitespace-nowrap">
+          {{ image_form.is_primary }}
+          <label class="text-xs text-gray-400">Primary</label>
+        </div>
+        {% if image_form.instance.pk %}
+        <div class="flex items-center gap-2 whitespace-nowrap">
+          {{ image_form.DELETE }}
+          <label class="text-xs text-red-400">Delete</label>
+        </div>
+        {% endif %}
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="flex gap-4">
+    <button type="submit" class="btn-gold">{% if is_edit %}Save Changes{% else %}Add Saree{% endif %}</button>
+    <a href="{% url 'shop:dashboard_saree_list' %}" class="btn-outline-gold">Cancel</a>
+  </div>
+</form>
+
+{% endblock %}

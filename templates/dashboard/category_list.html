@@ -1,0 +1,44 @@
+{% extends "dashboard/dashboard_base.html" %}
+{% block title %}Manage Categories{% endblock %}
+
+{% block dash_content %}
+
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+  <div>
+    <h1 class="font-heading text-3xl text-white">Categories</h1>
+    <p class="text-gray-500 text-sm mt-1">{{ categories.count }} categor{{ categories.count|pluralize:"y,ies" }}</p>
+  </div>
+  <a href="{% url 'shop:dashboard_category_add' %}" class="btn-gold text-xs">+ Add Category</a>
+</div>
+
+{% if categories %}
+<div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+  {% for cat in categories %}
+  <div class="glass rounded-sm overflow-hidden">
+    <div class="aspect-video bg-ink-700">
+      {% if cat.image %}
+        <img src="{{ cat.image.url }}" class="w-full h-full object-cover">
+      {% else %}
+        <div class="w-full h-full flex items-center justify-center text-gray-500 text-xs">No Image</div>
+      {% endif %}
+    </div>
+    <div class="p-5">
+      <h3 class="font-heading text-lg text-white">{{ cat.name }}</h3>
+      <p class="text-gold-500 text-xs mt-1">{{ cat.saree_count }} saree(s)</p>
+      {% if cat.description %}<p class="text-gray-500 text-xs mt-2 line-clamp-2">{{ cat.description }}</p>{% endif %}
+      <div class="flex gap-3 mt-5">
+        <a href="{% url 'shop:dashboard_category_edit' cat.pk %}" class="text-gold-500 hover:text-white text-xs px-3 py-1.5 border border-gold-500/40 rounded flex-1 text-center">Edit</a>
+        <a href="{% url 'shop:dashboard_category_delete' cat.pk %}" class="text-red-400 hover:text-red-300 text-xs px-3 py-1.5 border border-red-400/30 rounded flex-1 text-center">Delete</a>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+<div class="glass rounded-sm p-16 text-center">
+  <p class="text-gray-400 mb-6">No categories yet.</p>
+  <a href="{% url 'shop:dashboard_category_add' %}" class="btn-gold">Add Your First Category</a>
+</div>
+{% endif %}
+
+{% endblock %}

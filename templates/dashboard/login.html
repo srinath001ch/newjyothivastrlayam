@@ -1,0 +1,60 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard Login | {{ SHOP_NAME }}</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = { theme: { extend: { colors: {
+    gold: { 500:'#c9a24b', 400:'#d4b05c', 300:'#ddc073' },
+    ink: { 900:'#0a0a0a', 800:'#121212' },
+  }, fontFamily: { heading: ['Marcellus','serif'], body: ['Poppins','sans-serif'] } } } }
+</script>
+<link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body class="bg-ink-900 text-white font-body min-h-screen flex items-center justify-center px-5 hero-bg">
+
+<div class="w-full max-w-md">
+  <div class="text-center mb-10">
+    <span class="w-16 h-16 rounded-full border border-gold-500/60 flex items-center justify-center text-gold-500 font-heading text-2xl mx-auto mb-4">NJ</span>
+    <h1 class="font-heading text-2xl text-white">NEW JYOTHI VASTRALAYAM</h1>
+    <p class="text-gold-500 text-xs tracking-[0.3em] uppercase mt-2">Owner Dashboard</p>
+  </div>
+
+  <div class="glass rounded-sm p-8 md:p-10">
+    {% if messages %}
+      {% for message in messages %}
+        <div class="mb-6 px-4 py-3 rounded-sm border-l-4 border-red-500 bg-red-500/10 text-sm text-red-300">{{ message }}</div>
+      {% endfor %}
+    {% endif %}
+    {% if form.non_field_errors %}
+      <div class="mb-6 px-4 py-3 rounded-sm border-l-4 border-red-500 bg-red-500/10 text-sm text-red-300">
+        {{ form.non_field_errors.0 }}
+      </div>
+    {% endif %}
+    <form method="post" class="space-y-6">
+      {% csrf_token %}
+      <div>
+        <label class="text-xs uppercase tracking-widest text-gray-400 mb-2 block">Username</label>
+        <input type="text" name="username" required autofocus
+               class="w-full bg-black/40 border border-gold-500/30 rounded-sm px-5 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-gold-500 text-sm">
+      </div>
+      <div>
+        <label class="text-xs uppercase tracking-widest text-gray-400 mb-2 block">Password</label>
+        <input type="password" name="password" required
+               class="w-full bg-black/40 border border-gold-500/30 rounded-sm px-5 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-gold-500 text-sm">
+      </div>
+      <button type="submit" class="btn-gold w-full">Login to Dashboard</button>
+    </form>
+  </div>
+
+  <p class="text-center text-gray-500 text-xs mt-8">
+    <a href="{% url 'shop:home' %}" class="hover:text-gold-500">&larr; Back to Website</a>
+  </p>
+</div>
+
+</body>
+</html>

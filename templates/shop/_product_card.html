@@ -1,0 +1,29 @@
+{% load static %}
+<a href="{% url 'shop:product_detail' saree.slug %}" class="product-card tilt-card block group rounded-sm">
+  <div class="img-wrap aspect-[3/4] relative">
+    {% with img=saree.primary_image %}
+      {% if img %}
+        <img src="{{ img.image.url }}" alt="{{ saree.name }}" class="w-full h-full object-cover">
+      {% else %}
+        <img src="https://images.unsplash.com/photo-1610030181087-540f829b3fe8?q=80&w=800&auto=format&fit=crop" alt="{{ saree.name }}" class="w-full h-full object-cover">
+      {% endif %}
+    {% endwith %}
+    <div class="quick-overlay"></div>
+    {% if saree.is_featured %}
+      <span class="corner-fold" title="Featured"></span>
+    {% endif %}
+    {% if saree.discount_percent %}
+      <span class="absolute top-3 right-3 bg-ink-900/85 text-gold-200 text-xs font-semibold px-2 py-1 z-10">-{{ saree.discount_percent }}%</span>
+    {% endif %}
+    <div class="absolute bottom-0 left-0 right-0 p-4 z-10 translate-y-2 group-hover:translate-y-0 transition-transform duration-500">
+      <span class="text-xs uppercase tracking-widest text-gold-200">{{ saree.category.name|default:"Saree" }}</span>
+      <h3 class="font-heading text-lg text-white mt-1 line-clamp-1">{{ saree.name }}</h3>
+      <div class="flex items-baseline gap-2 mt-1">
+        <span class="text-gold-200 font-semibold">&#8377;{{ saree.price|floatformat:0 }}</span>
+        {% if saree.old_price %}
+          <span class="text-white/50 text-xs line-through">&#8377;{{ saree.old_price|floatformat:0 }}</span>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</a>

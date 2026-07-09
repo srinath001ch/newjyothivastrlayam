@@ -1,0 +1,43 @@
+{% extends "dashboard/dashboard_base.html" %}
+{% block title %}{{ title }}{% endblock %}
+
+{% block dash_content %}
+
+<div class="flex items-center gap-4 mb-8">
+  <a href="{% url 'shop:dashboard_category_list' %}" class="text-gray-400 hover:text-gold-500">
+    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"/></svg>
+  </a>
+  <h1 class="font-heading text-3xl text-white">{{ title }}</h1>
+</div>
+
+<form method="post" enctype="multipart/form-data" class="glass rounded-sm p-6 md:p-8 max-w-2xl space-y-6">
+  {% csrf_token %}
+  <div>
+    <label class="text-xs uppercase tracking-widest text-gray-400 mb-2 block">Category Name</label>
+    {{ form.name }}
+    {% if form.name.errors %}<p class="text-red-400 text-xs mt-1">{{ form.name.errors.0 }}</p>{% endif %}
+  </div>
+  <div>
+    <label class="text-xs uppercase tracking-widest text-gray-400 mb-2 block">Description (Optional)</label>
+    {{ form.description }}
+  </div>
+  <div>
+    <label class="text-xs uppercase tracking-widest text-gray-400 mb-2 block">Category Image</label>
+    {% if form.instance.pk and form.instance.image %}
+      <img src="{{ form.instance.image.url }}" class="w-32 h-32 object-cover rounded-sm mb-3">
+    {% endif %}
+    {{ form.image }}
+  </div>
+  <div>
+    <label class="text-xs uppercase tracking-widest text-gray-400 mb-2 block">Display Order</label>
+    {{ form.order }}
+    <p class="text-gray-500 text-xs mt-1">Lower numbers appear first on the homepage.</p>
+  </div>
+
+  <div class="flex gap-4 pt-4">
+    <button type="submit" class="btn-gold">{% if is_edit %}Save Changes{% else %}Add Category{% endif %}</button>
+    <a href="{% url 'shop:dashboard_category_list' %}" class="btn-outline-gold">Cancel</a>
+  </div>
+</form>
+
+{% endblock %}
